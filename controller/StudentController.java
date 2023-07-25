@@ -11,13 +11,18 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/student")
 public class StudentController {
-    private StudentService studentService;
+    private final StudentService studentService;
 
     public StudentController(StudentService studentService) {
         this.studentService = studentService;
     }
 
-    @PostMapping("{idStudent}")
+    @PostMapping
+    public Student createStudent(@RequestBody Student student) {
+        return studentService.createStudent(student);
+    }
+
+    @GetMapping("{idStudent}")
     public ResponseEntity<Student> readStudent(@PathVariable long idStudent) {
         Student student = studentService.readStudent(idStudent);
         if (student == null) {
@@ -36,8 +41,9 @@ public class StudentController {
     }
 
     @DeleteMapping("{idStudent}")
-    public Student deleteStudent(@PathVariable long idStudent) {
-        return studentService.deleteStudent(idStudent);
+    public ResponseEntity<Student> deleteStudent(@PathVariable long idStudent) {
+        studentService.deleteStudent(idStudent);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping
